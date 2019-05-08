@@ -78,7 +78,7 @@ public final class FluentdBackendFactory extends BackendFactory {
   @Override
   public synchronized LoggerBackend create(String loggingClassName) {
     if (loggerBackends.containsKey(loggingClassName)) return loggerBackends.get(loggingClassName);
-    FluentdRemoteLoggerSettings remoteSettings = resolveAttribute(REMOTE_SETTINGS, FluentdRemoteLoggerSettings.class);
+    FluentdRemoteSettings remoteSettings = resolveAttribute(REMOTE_SETTINGS, FluentdRemoteSettings.class);
     FluentLogger logger = remoteSettings != null
                         ? FluentLogger.getLogger(loggingClassName.replace('$', '.'), remoteSettings.getHost(), remoteSettings.getPort())
                         : FluentLogger.getLogger(loggingClassName.replace('$', '.'));

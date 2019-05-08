@@ -16,7 +16,7 @@
 package com.agsimeonov.flogger.backend.fluentd;
 
 /** Used to configure remote Fluentd loggers. */
-public interface FluentdRemoteLoggerSettings {
+public interface FluentdRemoteSettings {
 
   /**
    * Acquires the Fluentd host.

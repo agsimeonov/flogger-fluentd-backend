@@ -26,22 +26,22 @@ package com.agsimeonov.flogger.backend.fluentd;
  *   <li>{@code flogger.fluentd_port=<fluentd_port>}.
  * </ul>
  */
-public class SystemPropertiesFluentdRemoteLoggerSettings implements FluentdRemoteLoggerSettings {
+public class SystemPropertiesRemoteSettings implements FluentdRemoteSettings {
 
   private static final String FLUENTD_HOST = "flogger.fluentd_host";
   private static final String FLUENTD_PORT = "flogger.fluentd_port";
 
-  private static final FluentdRemoteLoggerSettings INSTANCE = new SystemPropertiesFluentdRemoteLoggerSettings();
+  private static final FluentdRemoteSettings INSTANCE = new SystemPropertiesRemoteSettings();
 
   /** Configures remote fluentd loggers via system proprties. */
-  private SystemPropertiesFluentdRemoteLoggerSettings() {}
+  private SystemPropertiesRemoteSettings() {}
 
   /**
    * Acquires a singleton FluentdRemoteLoggerSettings.
-   * 
+   *
    * @return the FluentdRemoteLoggerSettings singleton.
    */
-  public static FluentdRemoteLoggerSettings getInstance() {
+  public static FluentdRemoteSettings getInstance() {
     return INSTANCE;
   }
 

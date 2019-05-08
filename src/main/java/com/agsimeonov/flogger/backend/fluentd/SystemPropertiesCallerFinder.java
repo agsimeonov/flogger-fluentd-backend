@@ -34,12 +34,12 @@ public class SystemPropertiesCallerFinder extends FluentdCallerFinder {
 
   private static final LogCallerFinder INSTANCE = new SystemPropertiesCallerFinder();
 
-  /** Caller finder utilizing system properties for the tax prefix.. */
+  /** Caller finder utilizing system properties for the tax prefix. */
   private SystemPropertiesCallerFinder() {}
 
   /**
    * Acquires a singleton SystemPropertiesCallerFinder.
-   * 
+   *
    * @return the SystemPropertiesCallerFinder singleton.
    */
   public static LogCallerFinder getInstance() {

@@ -42,7 +42,7 @@ public class ArtifactIdCallerFinder extends FluentdCallerFinder {
 
   /**
    * Acquires a singleton ArtifactIdCallerFinder.
-   * 
+   *
    * @return the ArtifactIdCallerFinder singleton.
    */
   public static LogCallerFinder getInstance() {
