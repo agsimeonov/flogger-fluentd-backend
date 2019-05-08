@@ -41,7 +41,12 @@ final class FluentdSimpleLogHandler implements SimpleMessageFormatter.SimpleLogH
   @Override
   public void handleFormattedLogMessage(Level level, String message, Throwable thrown) {
     if (level != null) out.put("level", level.getName());
-    if (message != null) out.put("message", message);
+    if (message != null) {
+      if (!message.startsWith("[CONTEXT")) {
+        if (message.endsWith("]")) message = message.split(" \\[CONTEXT")[0];
+        if (!message.isEmpty()) out.put("message", message);
+      }
+    }
     if (thrown != null) {
       out.put("thrown", thrown);
       try (StringWriter stringWriter = new StringWriter()) {

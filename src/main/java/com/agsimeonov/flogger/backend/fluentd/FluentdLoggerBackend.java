@@ -15,12 +15,15 @@
  */
 package com.agsimeonov.flogger.backend.fluentd;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import com.google.common.flogger.LogSite;
+import com.google.common.flogger.MetadataKey;
 import com.google.common.flogger.backend.LogData;
 import com.google.common.flogger.backend.LoggerBackend;
 import com.google.common.flogger.backend.Metadata;
@@ -68,9 +71,17 @@ final class FluentdLoggerBackend extends LoggerBackend {
     }
     if (data.getMetadata() != null) {
       Metadata metadata = data.getMetadata();
+      Map<String, List<Object>> repeated = new HashMap<>();
       for (int i = 0; i < metadata.size(); i++) {
-        out.put(metadata.getKey(i).getLabel(), metadata.getValue(i));
+        MetadataKey<?> key = metadata.getKey(i);
+        Object value = metadata.getValue(i);
+        if (key.canRepeat()) {
+          repeated.computeIfAbsent(key.getLabel(), argument -> new ArrayList<>()).add(value);
+        } else {
+          out.put(key.getLabel(), value);
+        }
       }
+      repeated.entrySet().forEach(entry -> out.put(entry.getKey(), entry.getValue()));
     }
     logger.log(data.getLevel().getClass().getSimpleName(), out, TimeUnit.SECONDS.convert(data.getTimestampNanos(), TimeUnit.NANOSECONDS));
   }
