@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import javax.annotation.Nullable;
+
 import com.google.common.flogger.backend.LoggerBackend;
 import com.google.common.flogger.backend.Platform.LogCallerFinder;
 import com.google.common.flogger.backend.system.BackendFactory;
@@ -40,13 +42,14 @@ import org.fluentd.logger.FluentLogger;
  */
 public final class FluentdBackendFactory extends BackendFactory {
 
+  private static final String CALLER_FINDER = "caller_finder";
+  private static final String REMOTE_SETTINGS = "remote_settings";
+
   private static final FluentdBackendFactory INSTANCE = new FluentdBackendFactory();
 
   static {
     try {
-      Method resolveAttribute = DefaultPlatform.class.getDeclaredMethod("resolveAttribute", String.class, Class.class);
-      resolveAttribute.setAccessible(true);
-      LogCallerFinder callerFinder = (LogCallerFinder) resolveAttribute.invoke(null, "caller_finder", LogCallerFinder.class);
+      LogCallerFinder callerFinder = resolveAttribute(CALLER_FINDER, LogCallerFinder.class);
       if (callerFinder != null) {
         Field field = StackBasedCallerFinder.class.getDeclaredField("INSTANCE");
         Field modifiersField = Field.class.getDeclaredField("modifiers");
@@ -70,11 +73,39 @@ public final class FluentdBackendFactory extends BackendFactory {
 
   @Override
   public LoggerBackend create(String loggingClassName) {
+    FluentdRemoteLoggerSettings remoteSettings = resolveAttribute(REMOTE_SETTINGS, FluentdRemoteLoggerSettings.class);
+    if (remoteSettings != null) return new FluentdLoggerBackend(FluentLogger.getLogger(loggingClassName.replace('$', '.'), remoteSettings.getHost(), remoteSettings.getPort()));
     return new FluentdLoggerBackend(FluentLogger.getLogger(loggingClassName.replace('$', '.')));
   }
 
   @Override
   public String toString() {
     return "Fluentd backend";
+  }
+
+  /**
+   * Helper to call a static no-arg getter to obtain an instance of a specified type. This is used
+   * for platform aspects which are optional, but are expected to have a singleton available.
+   *
+   * @param <T> the type of the instance.
+   * @param attributeName the system property specifying an instance of a class.
+   * @param type the type of the instance.
+   *
+   * @return the return value of the specified static no-argument method, or null if the method
+   *     cannot be called or the returned value is of the wrong type.
+   *
+   * @see com.google.common.flogger.backend.system.DefaultPlatform#resolveAttribute
+   */
+  @Nullable
+  @SuppressWarnings("unchecked")
+  private static <T> T resolveAttribute(String attributeName, Class<T> type) {
+    try {
+      Method resolveAttribute = DefaultPlatform.class.getDeclaredMethod("resolveAttribute", String.class, Class.class);
+      resolveAttribute.setAccessible(true);
+      return (T) resolveAttribute.invoke(null, attributeName, type);
+    } catch (ReflectiveOperationException exception) {
+      exception.printStackTrace();
+      return null;
+    }
   }
 }

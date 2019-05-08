@@ -16,7 +16,7 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <flogger.version>0.4</flogger.version>
-    <fluentd.version>0.3.3</fluentd.version>
+    <fluentd.logger.version>0.3.3</fluentd.logger.version>
   </properties>
 
   <dependencies>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>org.fluentd</groupId>
       <artifactId>fluent-logger</artifactId>
-      <version>${fluentd.version}</version>
+      <version>${fluentd.logger.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

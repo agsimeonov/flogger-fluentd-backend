@@ -55,7 +55,6 @@ final class FluentdLoggerBackend extends LoggerBackend {
 
   @Override
   public void log(LogData data) {
-    System.err.println(data);
     Map<String, Object> out = new HashMap<String, Object>();
     SimpleMessageFormatter.format(data, new FluentdSimpleLogHandler(out));
     out.put("timestampNanos", data.getTimestampNanos());
