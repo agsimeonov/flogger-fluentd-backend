@@ -28,6 +28,7 @@ import com.google.common.flogger.backend.LogData;
 import com.google.common.flogger.backend.LoggerBackend;
 import com.google.common.flogger.backend.Metadata;
 import com.google.common.flogger.backend.SimpleMessageFormatter;
+import com.google.common.flogger.backend.Tags;
 import com.google.common.flogger.backend.system.SimpleLogRecord;
 
 import org.fluentd.logger.FluentLogger;
@@ -74,11 +75,17 @@ final class FluentdLoggerBackend extends LoggerBackend {
       Map<String, List<Object>> repeated = new HashMap<>();
       for (int i = 0; i < metadata.size(); i++) {
         MetadataKey<?> key = metadata.getKey(i);
+        String label = key.getLabel();
         Object value = metadata.getValue(i);
-        if (key.canRepeat()) {
-          repeated.computeIfAbsent(key.getLabel(), argument -> new ArrayList<>()).add(value);
+        if (value instanceof Tags) {
+          Tags tags = (Tags) value;
+          tags.emitAll(new LogTagsKeyValueHandler(label, out));
         } else {
-          out.put(key.getLabel(), value);
+          if (key.canRepeat()) {
+            repeated.computeIfAbsent(label, argument -> new ArrayList<>()).add(value);
+          } else {
+            out.put(label, value);
+          }
         }
       }
       repeated.entrySet().forEach(entry -> out.put(entry.getKey(), entry.getValue()));
