@@ -18,6 +18,8 @@ package com.agsimeonov.flogger.backend.fluentd;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -47,6 +49,8 @@ public final class FluentdBackendFactory extends BackendFactory {
 
   private static final FluentdBackendFactory INSTANCE = new FluentdBackendFactory();
 
+  private final Map<String, LoggerBackend> loggerBackends = new HashMap<>();
+
   static {
     try {
       LogCallerFinder callerFinder = resolveAttribute(CALLER_FINDER, LogCallerFinder.class);
@@ -72,10 +76,15 @@ public final class FluentdBackendFactory extends BackendFactory {
   }
 
   @Override
-  public LoggerBackend create(String loggingClassName) {
+  public synchronized LoggerBackend create(String loggingClassName) {
+    if (loggerBackends.containsKey(loggingClassName)) return loggerBackends.get(loggingClassName);
     FluentdRemoteLoggerSettings remoteSettings = resolveAttribute(REMOTE_SETTINGS, FluentdRemoteLoggerSettings.class);
-    if (remoteSettings != null) return new FluentdLoggerBackend(FluentLogger.getLogger(loggingClassName.replace('$', '.'), remoteSettings.getHost(), remoteSettings.getPort()));
-    return new FluentdLoggerBackend(FluentLogger.getLogger(loggingClassName.replace('$', '.')));
+    FluentLogger logger = remoteSettings != null
+                        ? FluentLogger.getLogger(loggingClassName.replace('$', '.'), remoteSettings.getHost(), remoteSettings.getPort())
+                        : FluentLogger.getLogger(loggingClassName.replace('$', '.'));
+    LoggerBackend result = new FluentdLoggerBackend(logger);
+    loggerBackends.put(loggingClassName, result);
+    return result;
   }
 
   @Override

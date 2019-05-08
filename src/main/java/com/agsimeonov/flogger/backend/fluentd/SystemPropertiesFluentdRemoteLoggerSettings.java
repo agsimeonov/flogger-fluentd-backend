@@ -52,7 +52,7 @@ public class SystemPropertiesFluentdRemoteLoggerSettings implements FluentdRemot
   @Override
   public int getPort() {
     try {
-      return new Integer(System.getProperty("flogger.fluentd_port"));
+      return Integer.valueOf(System.getProperty("flogger.fluentd_port"));
     } catch (Exception exception) {
       return 24224;
     }

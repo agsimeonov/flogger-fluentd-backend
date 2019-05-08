@@ -40,6 +40,7 @@ final class FluentdLoggerBackend extends LoggerBackend {
    * @param logger the Fluentd logger.
    */
   FluentdLoggerBackend(FluentLogger logger) {
+    Runtime.getRuntime().addShutdownHook(new Thread(logger::close));
     this.logger = logger;
   }
 
