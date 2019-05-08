@@ -79,7 +79,7 @@ final class FluentdLoggerBackend extends LoggerBackend {
         Object value = metadata.getValue(i);
         if (value instanceof Tags) {
           Tags tags = (Tags) value;
-          tags.emitAll(new LogTagsKeyValueHandler(label, out));
+          tags.emitAll(new FluentdTagsKeyValueHandler(label, out));
         } else {
           if (key.canRepeat()) {
             repeated.computeIfAbsent(label, argument -> new ArrayList<>()).add(value);

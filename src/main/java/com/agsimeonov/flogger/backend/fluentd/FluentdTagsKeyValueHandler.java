@@ -22,7 +22,7 @@ import java.util.Map;
 import com.google.common.flogger.backend.KeyValueHandler;
 
 /** Key Value handler employed when logging out Tags to Fluentd. */
-public class LogTagsKeyValueHandler implements KeyValueHandler {
+public class FluentdTagsKeyValueHandler implements KeyValueHandler {
 
   private final String label;
   private final Map<String, Object> out;
@@ -33,7 +33,7 @@ public class LogTagsKeyValueHandler implements KeyValueHandler {
    * @param label the label provided in the Flogger metadata.
    * @param out the output map sent to Fluentd.
    */
-  public LogTagsKeyValueHandler(String label, Map<String, Object> out) {
+  public FluentdTagsKeyValueHandler(String label, Map<String, Object> out) {
     this.label = label;
     this.out = out;
   }
