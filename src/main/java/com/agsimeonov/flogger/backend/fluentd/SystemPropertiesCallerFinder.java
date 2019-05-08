@@ -15,35 +15,32 @@
  */
 package com.agsimeonov.flogger.backend.fluentd;
 
-import java.io.FileReader;
-import java.io.IOException;
-
 import com.google.common.flogger.AbstractLogger;
 import com.google.common.flogger.backend.Platform.LogCallerFinder;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
 /**
- * Caller finder utilizing the Maven artifact identifier for the tax prefix.
+ * Caller finder utilizing system properties for the tax prefix.
  *
  * <p>To configure set the following system properties (also see {@link com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}:
  *
  * <ul>
- *   <li>{@code flogger.caller_finder=com.trove.platform.logging.ArtifactIdCallerFinder#getInstance}.
+ *   <li>{@code flogger.caller_finder=com.trove.platform.logging.SystemPropertiesCallerFinder#getInstance}.
+ *   <li>{@code flogger.tag_prefix=<tag_prefix>}.
  * </ul>
  */
-public class ArtifactIdCallerFinder extends FluentdCallerFinder {
+public class SystemPropertiesCallerFinder extends FluentdCallerFinder {
 
-  private static final LogCallerFinder INSTANCE = new ArtifactIdCallerFinder();
+  private static final String TAG_PREFIX = "flogger.tag_prefx";
 
-  /** Caller finder utilizing the Maven artifact identifier for the tag prefix. */
-  private ArtifactIdCallerFinder() {}
+  private static final LogCallerFinder INSTANCE = new SystemPropertiesCallerFinder();
+
+  /** Caller finder utilizing system properties for the tax prefix.. */
+  private SystemPropertiesCallerFinder() {}
 
   /**
-   * Acquires a singleton ArtifactIdCallerFinder.
+   * Acquires a singleton SystemPropertiesCallerFinder.
    * 
-   * @return the ArtifactIdCallerFinder singleton.
+   * @return the SystemPropertiesCallerFinder singleton.
    */
   public static LogCallerFinder getInstance() {
     return INSTANCE;
@@ -51,11 +48,6 @@ public class ArtifactIdCallerFinder extends FluentdCallerFinder {
 
   @Override
   public String findLoggingClass(Class<? extends AbstractLogger<?>> loggerClass) {
-    MavenXpp3Reader reader = new MavenXpp3Reader();
-    try {
-      return reader.read(new FileReader("pom.xml")).getArtifactId();
-    } catch (IOException | XmlPullParserException exception) {
-      throw new IllegalStateException("Maven artifact identifier was not found!");
-    }
+    return System.getProperty(TAG_PREFIX);
   }
 }

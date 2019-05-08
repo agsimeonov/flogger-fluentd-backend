@@ -28,6 +28,9 @@ package com.agsimeonov.flogger.backend.fluentd;
  */
 public class SystemPropertiesFluentdRemoteLoggerSettings implements FluentdRemoteLoggerSettings {
 
+  private static final String FLUENTD_HOST = "flogger.fluentd_host";
+  private static final String FLUENTD_PORT = "flogger.fluentd_port";
+
   private static final FluentdRemoteLoggerSettings INSTANCE = new SystemPropertiesFluentdRemoteLoggerSettings();
 
   /** Configures remote fluentd loggers via system proprties. */
@@ -44,14 +47,14 @@ public class SystemPropertiesFluentdRemoteLoggerSettings implements FluentdRemot
 
   @Override
   public String getHost() {
-    String result = System.getProperty("flogger.fluentd_host");
+    String result = System.getProperty(FLUENTD_HOST);
     return result != null ? result : "localhost";
   }
 
   @Override
   public int getPort() {
     try {
-      return Integer.valueOf(System.getProperty("flogger.fluentd_port"));
+      return Integer.valueOf(System.getProperty(FLUENTD_PORT));
     } catch (Exception exception) {
       return 24224;
     }
