@@ -22,6 +22,10 @@ dependency-reduced-pom.xml
 .project
 .settings/
 
+# Visual Studio Code Files
+
+.vscode/
+
 # IntelliJ IDEA Files
 
 *.iml

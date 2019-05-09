@@ -30,7 +30,7 @@ import com.google.common.flogger.backend.Platform.LogCallerFinder;
  */
 public class SystemPropertiesCallerFinder extends FluentdCallerFinder {
 
-  private static final String TAG_PREFIX = "flogger.tag_prefx";
+  private static final String TAG_PREFIX = "flogger.tag_prefix";
 
   private static final LogCallerFinder INSTANCE = new SystemPropertiesCallerFinder();
 

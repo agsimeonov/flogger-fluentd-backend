@@ -70,7 +70,11 @@ public final class FluentdBackendFactory extends BackendFactory {
   /** BackendFactory for Fluentd. */
   private FluentdBackendFactory() {}
 
-  /** This method is expected to be called via reflection (and might otherwise be unused). */
+  /**
+   * This method is expected to be called via reflection (and might otherwise be unused).
+   *
+   * @return the BackendFactory singleton.
+   */
   public static BackendFactory getInstance() {
     return INSTANCE;
   }
