@@ -15,20 +15,6 @@
  */
 package com.agsimeonov.flogger.backend.fluentd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+public class FluentdBackendFactoryTest {
 
-import org.junit.jupiter.api.Test;
-
-public class ArtifactIdCallerFinderTest {
-
-  @Test
-  void testGetInstance() {
-    assertNotNull(ArtifactIdCallerFinder.getInstance());
-  }
-
-  @Test
-  void testFindLoggingClass() {
-    assertEquals(ArtifactIdCallerFinder.getInstance().findLoggingClass(null), "flogger-fluentd-backend");
-  }
 }
