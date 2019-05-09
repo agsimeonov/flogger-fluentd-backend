@@ -20,15 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-public class ArtifactIdCallerFinderTest {
+public class ImplementationTitleCallerFinderTest {
 
   @Test
   void testGetInstance() {
-    assertNotNull(ArtifactIdCallerFinder.getInstance());
+    assertNotNull(ImplementationTitleCallerFinder.getInstance());
   }
 
   @Test
   void testFindLoggingClass() {
-    assertEquals(ArtifactIdCallerFinder.getInstance().findLoggingClass(null), "flogger-fluentd-backend");
+    assertEquals(ImplementationTitleCallerFinder.getInstance().findLoggingClass(null), "flogger-fluentd-backend");
   }
 }
