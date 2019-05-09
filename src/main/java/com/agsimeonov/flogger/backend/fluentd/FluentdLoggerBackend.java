@@ -93,7 +93,7 @@ final class FluentdLoggerBackend extends LoggerBackend {
       }
       repeated.entrySet().forEach(entry -> out.put(entry.getKey(), entry.getValue()));
     }
-    logger.log(data.getLevel().getClass().getSimpleName(), out, TimeUnit.SECONDS.convert(data.getTimestampNanos(), TimeUnit.NANOSECONDS));
+    logger.log(data.getLevel().getName(), out, TimeUnit.SECONDS.convert(data.getTimestampNanos(), TimeUnit.NANOSECONDS));
   }
 
   @Override
