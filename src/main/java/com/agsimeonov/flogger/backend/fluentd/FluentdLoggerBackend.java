@@ -37,15 +37,18 @@ import org.fluentd.logger.FluentLogger;
 final class FluentdLoggerBackend extends LoggerBackend {
 
   private final FluentLogger logger;
+  private final FluentdLevelDisabler disabler;
 
   /**
    * A logging backend that uses Fluentd to output log statements..
    *
    * @param logger the Fluentd logger.
+   * @param disabler a logging disabler used by {@link #isLoggable(Level)}
    */
-  FluentdLoggerBackend(FluentLogger logger) {
+  FluentdLoggerBackend(FluentLogger logger, FluentdLevelDisabler disabler) {
     Runtime.getRuntime().addShutdownHook(new Thread(logger::close));
     this.logger = logger;
+    this.disabler = disabler;
   }
 
   @Override
@@ -55,7 +58,8 @@ final class FluentdLoggerBackend extends LoggerBackend {
 
   @Override
   public boolean isLoggable(Level level) {
-    return true;
+    if (disabler == null) return true;
+    return disabler == null ? true : disabler.isLoggable(level);
   }
 
   @Override

@@ -38,14 +38,14 @@ import org.fluentd.logger.FluentLogger;
  * com.google.common.flogger.backend.system.DefaultPlatform}):
  *
  * <ul>
- *   <li>{@code flogger.backend_factory=
- *       com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance}.
+ *   <li>{@code flogger.backend_factory=com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance}.
  * </ul>
  */
 public final class FluentdBackendFactory extends BackendFactory {
 
   private static final String CALLER_FINDER = "caller_finder";
   private static final String REMOTE_SETTINGS = "remote_settings";
+  private static final String LEVEL_DISABLER = "level_disabler";
 
   private static final FluentdBackendFactory INSTANCE = new FluentdBackendFactory();
 
@@ -82,7 +82,7 @@ public final class FluentdBackendFactory extends BackendFactory {
     FluentLogger logger = remoteSettings != null
                         ? FluentLogger.getLogger(loggingClassName.replace('$', '.'), remoteSettings.getHost(), remoteSettings.getPort())
                         : FluentLogger.getLogger(loggingClassName.replace('$', '.'));
-    LoggerBackend result = new FluentdLoggerBackend(logger);
+    LoggerBackend result = new FluentdLoggerBackend(logger, resolveAttribute(LEVEL_DISABLER, FluentdLevelDisabler.class));
     loggerBackends.put(loggingClassName, result);
     return result;
   }
