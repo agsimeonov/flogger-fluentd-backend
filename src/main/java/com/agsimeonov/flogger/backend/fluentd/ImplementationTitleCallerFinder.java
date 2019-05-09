@@ -60,11 +60,11 @@ public class ImplementationTitleCallerFinder extends FluentdCallerFinder {
       if (implementationTitle != null) return implementationTitle;
     }
 
-    MavenXpp3Reader reader = new MavenXpp3Reader();
     try {
+      MavenXpp3Reader reader = new MavenXpp3Reader();
       implementationTitle = reader.read(new FileReader("pom.xml")).getArtifactId();
       if (implementationTitle != null) return implementationTitle;
-    } catch (IOException | XmlPullParserException exception) {}
+    } catch (IOException | NoClassDefFoundError | XmlPullParserException exception) {}
     throw new IllegalStateException("Implementation title was not found!");
   }
 }

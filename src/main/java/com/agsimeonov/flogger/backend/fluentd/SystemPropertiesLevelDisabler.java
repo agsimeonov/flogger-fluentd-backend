@@ -25,16 +25,14 @@ import java.util.logging.Level;
  *
  * <ul>
  *   <li>{@code flogger.level_disabler=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesLevelDisabler#getInstance}.
- *   <li>{@code flogger.exclusive=&lt;anything&gt;}.
- *   <li>{@code flogger.inclusive=&lt;anything&gt;}.
- *   <li>{@code logger.&lt;name&gt;=&lt;anything&gt;}.
+ *   <li>{@code flogger.exclusive=&lt;true/false&gt;}.
+ *   <li>{@code logger.&lt;name&gt;=&lt;true/false&gt;}.
  *   <li>{@code flogger.level=&lt;integer&gt;}.
  * </ul>
  */
 public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
 
   private static final String EXCLUSIVE = "flogger.exclusive";
-  private static final String INCLUSIVE = "flogger.inclusive";
   private static final String LEVEL = "flogger.level";
 
   private static final FluentdLevelDisabler INSTANCE = new SystemPropertiesLevelDisabler();
@@ -55,21 +53,19 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
    * Determines whether given levels are loggable via the following system properties:
    * 
    * <ul>
-   *   <li>{@code flogger.exclusive=&lt;anything&gt;}.
-   *   <li>{@code flogger.inclusive=&lt;anything&gt;}.
-   *   <li>{@code logger.&lt;name&gt;=&lt;anything&gt;}.
+   *   <li>{@code flogger.exclusive=&lt;true/false&gt;}.
+   *   <li>{@code logger.&lt;name&gt;=&lt;true/false&gt;}.
    *   <li>{@code flogger.level=&lt;integer&gt;}
    * </ul>
    * 
    * <pre>
-   *   If neither or flogger.exclusive or flogger.inclusive is set defaults to true.
-   *   If both flogger.exclusive and flogger.inclusive are set defaults to true.
-   *   If flogger.exclusive and and logger.&lt;name&gt; is set return false.
-   *   If flogger.exclusive and flogger.level return true parameter level is less than.
-   *   Otherwise if flogger.exclusive return true.
-   *   If flogger.inclusive and and logger.&lt;name&gt; is set return true.
-   *   If flogger.inclusive and flogger.level return true parameter level is less false.
-   *   Otherwise if flogger.inclusive return false.
+   *   If flogger.exclusive is not set returns true.
+   *   If flogger.exclusive is set to true and logger.&lt;name&gt; is set to true returns false.
+   *   If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is less than flogger.level.
+   *   Otherwise if flogger.exclusive is set to true returns true.
+   *   If flogger.exclusive is set to false and logger.&lt;name&gt; is set to true returns true.
+   *   If flogger.exclusive is set to false and flogger.level is set returns true if parameter level is greater than or equal to flogger.level.
+   *   Otherwise if flogger.exclusive is is to false returns false.
    * </pre>
    *
    * @param level the given level.
@@ -78,11 +74,14 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
   @Override
   public boolean isLoggable(Level level) {
     String exclusive = System.getProperty(EXCLUSIVE);
-    String inclusive = System.getProperty(INCLUSIVE);
-    if (exclusive == null && inclusive == null) return true;
-    if (exclusive != null && inclusive != null) return true;
+    if (exclusive == null) return true;
+    boolean isExclusive = exclusive.toLowerCase().equals("true") ? true : false;
 
     String name = System.getProperty("flogger." + level.getName());
+    boolean isNameSet = name == null
+                      ? false
+                      : name.toLowerCase().equals("true") ? true : false;
+
     Integer value;
     try {
       value = Integer.valueOf(System.getProperty(LEVEL));
@@ -90,12 +89,12 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
       value = null;
     }
     
-    if (exclusive != null) {
-      if (name != null) return false;
+    if (isExclusive) {
+      if (isNameSet) return false;
       if (value != null) return level.intValue() < value;
       return true;
     } else {
-      if (name != null) return true;
+      if (isNameSet) return true;
       if (value != null) return level.intValue() >= value;
       return false;
     }
