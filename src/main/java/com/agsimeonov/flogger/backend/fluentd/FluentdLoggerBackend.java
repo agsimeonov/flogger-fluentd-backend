@@ -58,7 +58,6 @@ final class FluentdLoggerBackend extends LoggerBackend {
 
   @Override
   public boolean isLoggable(Level level) {
-    if (disabler == null) return true;
     return disabler == null ? true : disabler.isLoggable(level);
   }
 
