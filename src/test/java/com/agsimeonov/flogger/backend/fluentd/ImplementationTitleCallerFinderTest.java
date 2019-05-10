@@ -15,8 +15,8 @@
  */
 package com.agsimeonov.flogger.backend.fluentd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +29,6 @@ public class ImplementationTitleCallerFinderTest {
 
   @Test
   void testFindLoggingClass() {
-    assertEquals(ImplementationTitleCallerFinder.getInstance().findLoggingClass(null), "flogger-fluentd-backend");
+    assertThrows(IllegalStateException.class, () -> ImplementationTitleCallerFinder.getInstance().findLoggingClass(null));
   }
 }

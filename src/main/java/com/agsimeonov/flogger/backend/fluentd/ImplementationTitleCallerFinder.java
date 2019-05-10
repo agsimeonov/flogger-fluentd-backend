@@ -15,15 +15,9 @@
  */
 package com.agsimeonov.flogger.backend.fluentd;
 
-import java.lang.Package;
-import java.io.FileReader;
-import java.io.IOException;
-
 import com.google.common.flogger.AbstractLogger;
 import com.google.common.flogger.backend.Platform.LogCallerFinder;
-
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import com.google.common.flogger.util.CallerFinder;
 
 /**
  * Caller finder utilizing the implementation title as the tax prefix.
@@ -52,19 +46,11 @@ public class ImplementationTitleCallerFinder extends FluentdCallerFinder {
 
   @Override
   public String findLoggingClass(Class<? extends AbstractLogger<?>> loggerClass) {
-    String implementationTitle;
-
-    Package pack = this.getClass().getPackage();
-    if (pack != null) {
-      implementationTitle = pack.getImplementationTitle();
-      if (implementationTitle != null) return implementationTitle;
-    }
-
     try {
-      MavenXpp3Reader reader = new MavenXpp3Reader();
-      implementationTitle = reader.read(new FileReader("pom.xml")).getArtifactId();
-      if (implementationTitle != null) return implementationTitle;
-    } catch (IOException | NoClassDefFoundError | XmlPullParserException exception) {}
-    throw new IllegalStateException("Implementation title was not found!");
+      StackTraceElement caller = CallerFinder.findCallerOf(loggerClass, new Throwable(), 1);
+      return Class.forName(caller.getClassName()).getPackage().getImplementationTitle();
+    } catch (Exception exception) {
+      throw new IllegalStateException("Implementation title was not found!");
+    }
   }
 }
