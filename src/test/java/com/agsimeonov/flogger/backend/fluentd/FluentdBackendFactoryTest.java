@@ -34,10 +34,13 @@ import com.google.common.flogger.backend.LoggerBackend;
 import com.google.common.flogger.backend.system.BackendFactory;
 import com.google.common.flogger.backend.system.StackBasedCallerFinder;
 
+import org.fluentd.logger.Config;
 import org.fluentd.logger.FluentLogger;
 import org.fluentd.logger.sender.RawSocketSender;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -78,7 +81,9 @@ public class FluentdBackendFactoryTest {
   }
 
   @Test
+  @ResourceLock(Resources.SYSTEM_PROPERTIES)
   void testCreateWithRemoteSettings() throws Exception {
+    System.setProperty(Config.FLUENT_SENDER_CLASS, RawSocketSender.class.getName());
     LoggerBackend backend = backendFactory.create(stringProvider().findFirst().get());
     FluentLogger logger = tryToReadFieldValue(backend.getClass().getDeclaredField("logger"), backend).andThenTry(x -> (FluentLogger) x).get();
     assertEquals(tryToReadFieldValue(RawSocketSender.class.getDeclaredField("host"), logger.getSender()).get(), "localhost");

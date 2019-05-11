@@ -57,6 +57,24 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger-testing</artifactId>
+      <version>${flogger.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.moznion</groupId>
+      <artifactId>fluent-logger-mock-sender</artifactId>
+      <version>0.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-nop</artifactId>
+      <version>1.7.26</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

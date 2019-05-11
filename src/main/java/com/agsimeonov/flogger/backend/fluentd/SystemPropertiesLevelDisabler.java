@@ -58,15 +58,13 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
    *   <li>{@code flogger.level=&lt;integer&gt;}
    * </ul>
    * 
-   * <pre>
-   *   If flogger.exclusive is not set returns true.
-   *   If flogger.exclusive is set to true and logger.&lt;name&gt; is set to true returns false.
-   *   If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is less than flogger.level.
-   *   Otherwise if flogger.exclusive is set to true returns true.
-   *   If flogger.exclusive is set to false and logger.&lt;name&gt; is set to true returns true.
-   *   If flogger.exclusive is set to false and flogger.level is set returns true if parameter level is greater than or equal to flogger.level.
-   *   Otherwise if flogger.exclusive is is to false returns false.
-   * </pre>
+   * If flogger.exclusive is not set returns true.<br>
+   * If flogger.exclusive is set to true and logger.&lt;name&gt; is set to true returns false.<br>
+   * If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is less than flogger.level.<br>
+   * Otherwise if flogger.exclusive is set to true returns true.<br>
+   * If flogger.exclusive is set to false and logger.&lt;name&gt; is set to true returns true.<br>
+   * If flogger.exclusive is set to false and flogger.level is set returns true if parameter level is greater than or equal to flogger.level.<br>
+   * Otherwise if flogger.exclusive is is to false returns false.<br>
    *
    * @param level the given level.
    * @return true if the given level is loggable, otherwise false.
