@@ -40,7 +40,7 @@ final class FluentdLoggerBackend extends LoggerBackend {
   private final FluentdLevelDisabler disabler;
 
   /**
-   * A logging backend that uses Fluentd to output log statements..
+   * A logging backend that uses Fluentd to output log statements.
    *
    * @param logger the Fluentd logger.
    * @param disabler a logging disabler used by {@link #isLoggable(Level)}
