@@ -20,14 +20,14 @@ import java.util.logging.Level;
 /** 
  * Determines whether logging is disabled at specific levels based on system properties.
  *
- * <p>To configure this level disabler for Flogger set the following system property (also see {@link
- * com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}:
+ * <p>To configure this level disabler for Flogger set the following system properties (also see {@link
+ * com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}):
  *
  * <ul>
  *   <li>{@code flogger.level_disabler=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesLevelDisabler#getInstance}.
- *   <li>{@code flogger.exclusive=&lt;true/false&gt;}.
- *   <li>{@code logger.&lt;name&gt;=&lt;true/false&gt;}.
- *   <li>{@code flogger.level=&lt;integer&gt;}.
+ *   <li>{@code flogger.exclusive=<true/false>}.
+ *   <li>{@code logger.<name>=<true/false>}.
+ *   <li>{@code flogger.level=<integer>}.
  * </ul>
  */
 public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
@@ -52,12 +52,14 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
   /**
    * Determines whether given levels are loggable via the following system properties:
    * 
+   * <p>This outcome method is configured using the following system properties:
+   *
    * <ul>
-   *   <li>{@code flogger.exclusive=&lt;true/false&gt;}.
-   *   <li>{@code logger.&lt;name&gt;=&lt;true/false&gt;}.
-   *   <li>{@code flogger.level=&lt;integer&gt;}
-   * </ul>
-   * 
+   *   <li>{@code flogger.exclusive=<true/false>}.
+   *   <li>{@code logger.<name>=<true/false>}.
+   *   <li>{@code flogger.level=<integer>}
+   * </ul><br>
+   *
    * If flogger.exclusive is not set returns true.<br>
    * If flogger.exclusive is set to true and logger.&lt;name&gt; is set to true returns false.<br>
    * If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is less than flogger.level.<br>

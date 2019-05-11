@@ -18,7 +18,7 @@ package com.agsimeonov.flogger.backend.fluentd;
 /**
  * Configures remote fluentd loggers via system proprties.
  *
- * <p>To configure set the following system properties (also see {@link com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}:
+ * <p>To configure set the following system properties (also see {@link com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}):
  *
  * <ul>
  *   <li>{@code flogger.remote_settings=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesFluentdRemoteLoggerSettings#getInstance}.

@@ -38,7 +38,7 @@ import org.fluentd.logger.FluentLogger;
  * com.google.common.flogger.backend.system.DefaultPlatform}):
  *
  * <ul>
- *   <li>{@code flogger.backend_factory=com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance}.
+ *   <li>{@code flogger.backend_factory=com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance}).
  * </ul>
  */
 public final class FluentdBackendFactory extends BackendFactory {

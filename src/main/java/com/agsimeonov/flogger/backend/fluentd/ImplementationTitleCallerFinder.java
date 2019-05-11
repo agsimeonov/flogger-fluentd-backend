@@ -22,7 +22,7 @@ import com.google.common.flogger.util.CallerFinder;
 /**
  * Caller finder utilizing the implementation title as the tax prefix.
  *
- * <p>To configure set the following system properties (also see {@link com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}:
+ * <p>To configure set the following system properties (also see {@link com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory}):
  *
  * <ul>
  *   <li>{@code flogger.caller_finder=com.trove.platform.logging.ImplementationTitleCallerFinder#getInstance}.
