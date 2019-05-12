@@ -45,9 +45,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class FluentdBackendFactoryTest {
+class FluentdBackendFactoryTest {
 
-  private static BackendFactory backendFactory;
+  static BackendFactory backendFactory;
 
   @BeforeAll
   static void initialize() {

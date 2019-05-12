@@ -23,7 +23,7 @@ import com.google.common.flogger.LogSite;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class FluentdCallerFinderTest extends FluentdCallerFinder {
+class FluentdCallerFinderTest extends FluentdCallerFinder {
 
   @ParameterizedTest
   @CsvSource("com.agsimeonov.flogger.backend.fluentd.FluentdCallerFinder, -1")

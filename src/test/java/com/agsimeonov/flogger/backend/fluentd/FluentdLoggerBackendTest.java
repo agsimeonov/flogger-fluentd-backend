@@ -46,12 +46,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import net.moznion.fluent.logger.mock.sender.MockSender;
 
 @ResourceLock(Resources.SYSTEM_PROPERTIES)
-public class FluentdLoggerBackendTest {
+class FluentdLoggerBackendTest {
 
-  private static final String MOCK_SENDER = "MOCK_SENDER";
+  static final String MOCK_SENDER = "MOCK_SENDER";
 
-  private static LoggerBackend backend;
-  private static MockSender sender;
+  static LoggerBackend backend;
+  static MockSender sender;
 
   @BeforeAll
   static void initialize() throws Exception {
@@ -100,7 +100,7 @@ public class FluentdLoggerBackendTest {
     assertEquals(log.get("className"), "com.google.FakeClass");
     assertEquals(log.get("methodName"), "fakeMethod");
     assertEquals(log.get("timestampNanos"), timestampNanos);
-    assertEquals(log.get("level"), Level.CONFIG.toString());
+    assertEquals(log.get("level"), Level.CONFIG.getName());
     assertEquals(log.get("test"), "test");
     List<String> tags = (List<String>) log.get("tags");
     assertTrue(Stream.of("a", "b", "c").allMatch(x -> tags.contains(x)));
@@ -118,7 +118,7 @@ public class FluentdLoggerBackendTest {
     backend.handleError(expected, data);
     assertTrue(sender.getFluentLogs().size() == 1);
     Map<String, Object> log = sender.getFluentLogs().get(0).getData();
-    assertEquals(log.get("level"), Level.SEVERE.toString());
+    assertEquals(log.get("level"), Level.SEVERE.getName());
     assertEquals(log.get("message").toString(), SimpleLogRecord.error(expected, data).toString());
     sender.clearFluentLogs();
   }
