@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
 import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 import static org.junit.platform.commons.support.ReflectionSupport.newInstance;
@@ -40,7 +41,6 @@ import org.fluentd.logger.sender.RawSocketSender;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.api.parallel.Resources;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -80,7 +80,7 @@ class FluentdBackendFactoryTest {
   }
 
   @Test
-  @ResourceLock(Resources.SYSTEM_PROPERTIES)
+  @ResourceLock(SYSTEM_PROPERTIES)
   void testCreateWithRemoteSettings() throws Exception {
     System.setProperty(Config.FLUENT_SENDER_CLASS, RawSocketSender.class.getName());
     LoggerBackend backend = backendFactory.create(stringProvider().findFirst().get());

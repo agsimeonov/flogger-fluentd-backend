@@ -16,11 +16,14 @@
 package com.agsimeonov.flogger.backend.fluentd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+@ResourceLock(SYSTEM_PROPERTIES)
 class SystemPropertiesCallerFinderTest {
 
   static String tagPrefix;

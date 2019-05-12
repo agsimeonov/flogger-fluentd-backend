@@ -26,14 +26,14 @@ import java.util.logging.Level;
  * <ul>
  *   <li>{@code flogger.level_disabler=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesLevelDisabler#getInstance}.
  *   <li>{@code flogger.exclusive=<true/false>}.
- *   <li>{@code logger.<name>=<true/false>}.
+ *   <li>{@code flogger.<name>=<true/false>}.
  *   <li>{@code flogger.level=<integer>}.
  * </ul>
  */
 public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
 
-  private static final String EXCLUSIVE = "flogger.exclusive";
-  private static final String LEVEL = "flogger.level";
+  static final String EXCLUSIVE = "flogger.exclusive";
+  static final String LEVEL = "flogger.level";
 
   private static final FluentdLevelDisabler INSTANCE = new SystemPropertiesLevelDisabler();
 
@@ -62,10 +62,10 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
    *
    * If flogger.exclusive is not set returns true.<br>
    * If flogger.exclusive is set to true and logger.&lt;name&gt; is set to true returns false.<br>
-   * If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is less than flogger.level.<br>
+   * If flogger.exclusive is set to true and flogger.level is set returns true if parameter level is greater than flogger.level.<br>
    * Otherwise if flogger.exclusive is set to true returns true.<br>
    * If flogger.exclusive is set to false and logger.&lt;name&gt; is set to true returns true.<br>
-   * If flogger.exclusive is set to false and flogger.level is set returns true if parameter level is greater than or equal to flogger.level.<br>
+   * If flogger.exclusive is set to false and flogger.level is set returns true if parameter level is less greater than or equal to flogger.level.<br>
    * Otherwise if flogger.exclusive is is to false returns false.<br>
    *
    * @param level the given level.
@@ -77,7 +77,7 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
     if (exclusive == null) return true;
     boolean isExclusive = exclusive.toLowerCase().equals("true") ? true : false;
 
-    String name = System.getProperty("flogger." + level.getName());
+    String name = System.getProperty(getNamePropertyKey(level));
     boolean isNameSet = name == null
                       ? false
                       : name.toLowerCase().equals("true") ? true : false;
@@ -91,12 +91,21 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
     
     if (isExclusive) {
       if (isNameSet) return false;
-      if (value != null) return level.intValue() < value;
+      if (value != null) return level.intValue() > value;
       return true;
     } else {
       if (isNameSet) return true;
       if (value != null) return level.intValue() >= value;
       return false;
     }
+  }
+
+  /**
+   * Acquires the flogger.<name> system property key.
+   *
+   * @return the flogger.<name> system property key.
+   */
+  static String getNamePropertyKey(Level level) {
+    return "flogger." + level.getName();
   }
 }

@@ -18,6 +18,7 @@ package com.agsimeonov.flogger.backend.fluentd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 import static org.junit.platform.commons.support.ReflectionSupport.tryToReadFieldValue;
 
 import java.util.Date;
@@ -39,13 +40,12 @@ import org.fluentd.logger.FluentLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.api.parallel.Resources;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import net.moznion.fluent.logger.mock.sender.MockSender;
 
-@ResourceLock(Resources.SYSTEM_PROPERTIES)
+@ResourceLock(SYSTEM_PROPERTIES)
 class FluentdLoggerBackendTest {
 
   static final String MOCK_SENDER = "MOCK_SENDER";
@@ -69,13 +69,14 @@ class FluentdLoggerBackendTest {
   }
 
   @Test
+  @ResourceLock(SYSTEM_PROPERTIES)
   public void testIsLoggable() {
     assertTrue(backend.isLoggable(Level.FINEST));
     System.setProperty("flogger.exclusive", "true");
-    System.setProperty("flogger." + Level.FINEST.getName(), "true");
+    System.setProperty(SystemPropertiesLevelDisabler.getNamePropertyKey(Level.FINEST), "true");
     assertFalse(backend.isLoggable(Level.FINEST));
     System.setProperty("flogger.exclusive", "false");
-    System.setProperty("flogger." + Level.FINEST.getName(), "false");
+    System.setProperty(SystemPropertiesLevelDisabler.getNamePropertyKey(Level.FINEST), "false");
   }
 
   @Test
