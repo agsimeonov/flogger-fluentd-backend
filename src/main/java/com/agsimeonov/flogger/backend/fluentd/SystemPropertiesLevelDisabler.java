@@ -50,7 +50,7 @@ public class SystemPropertiesLevelDisabler implements FluentdLevelDisabler {
   }
 
   /**
-   * Determines whether given levels are loggable via the following system properties:
+   * Determines whether given levels are loggable via system properties.
    * 
    * <p>This outcome method is configured using the following system properties:
    *

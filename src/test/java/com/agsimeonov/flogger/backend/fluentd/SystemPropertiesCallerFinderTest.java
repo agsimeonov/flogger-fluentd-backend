@@ -32,7 +32,7 @@ class SystemPropertiesCallerFinderTest {
   @BeforeAll
   static void initialize() {
     tagPrefix = FluentdBackendFactoryTest.stringProvider().findFirst().get();
-    System.setProperty("flogger.tag_prefix", tagPrefix);
+    System.setProperty(SystemPropertiesCallerFinder.TAG_PREFIX, tagPrefix);
     callerFinder = ReflectionUtils.newInstance(SystemPropertiesCallerFinder.class);
   }
 

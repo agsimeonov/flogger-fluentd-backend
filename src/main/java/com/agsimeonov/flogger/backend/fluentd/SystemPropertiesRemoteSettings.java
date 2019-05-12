@@ -28,8 +28,8 @@ package com.agsimeonov.flogger.backend.fluentd;
  */
 public class SystemPropertiesRemoteSettings implements FluentdRemoteSettings {
 
-  private static final String FLUENTD_HOST = "flogger.fluentd_host";
-  private static final String FLUENTD_PORT = "flogger.fluentd_port";
+  static final String FLUENTD_HOST = "flogger.fluentd_host";
+  static final String FLUENTD_PORT = "flogger.fluentd_port";
 
   private static final FluentdRemoteSettings INSTANCE = new SystemPropertiesRemoteSettings();
 
@@ -45,12 +45,34 @@ public class SystemPropertiesRemoteSettings implements FluentdRemoteSettings {
     return INSTANCE;
   }
 
+  /**
+   * Acquires the Fluentd host using a system property. Fallbacks to localhost.
+   *
+   * <p>To configure set the following:
+   *
+   * <ul>
+   *   <li>{@code flogger.fluentd_host=<fluentd_host>}.
+   * </ul><br>
+   *
+   * @return the Fluentd host based on a system property, fallbacks to localhost.
+   */
   @Override
   public String getHost() {
     String result = System.getProperty(FLUENTD_HOST);
     return result != null ? result : "localhost";
   }
 
+  /**
+   * Acquires the Fluentd port using a system property. Fallbacks to 24224.
+   *
+   * <p>To configure set the following:
+   *
+   * <ul>
+   *   <li>{@code flogger.fluentd_port=<fluentd_port>}.
+   * </ul><br>
+   *
+   * @return the Fluentd port based on a system property, fallbacks to 24224.
+   */
   @Override
   public int getPort() {
     try {
