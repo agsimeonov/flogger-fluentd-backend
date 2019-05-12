@@ -53,7 +53,6 @@ class FluentdBackendFactoryTest {
   static void initialize() {
     System.setProperty("flogger.backend_factory", "com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance");
     System.setProperty("flogger.caller_finder", "com.agsimeonov.flogger.backend.fluentd.SystemPropertiesCallerFinder#getInstance");
-    System.setProperty("flogger.tag_prefix", "test");
     backendFactory = newInstance(FluentdBackendFactory.class);
   }
 
