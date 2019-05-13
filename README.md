@@ -144,7 +144,7 @@ flogger.caller_finder=com.agsimeonov.flogger.backend.fluentd.ImplementationTitle
 
 By default Flogger Fluentd Backend assumed the fluent daemon is launched locally.Sometimes you will need to connect to Fluentd on a remote host. In order to achieve this you can either configure your own mechanism by extending and configuring `FluentdRemoteSettings` or you can use System Properties and utilize `SystemPropertiesRemoteSettings`.
 
-#### Utilize Java System Properties
+#### Configure Remote Settings via Java System Properties
 
 Set the Java System Properties necessary for a remote Fluentd connection as follows:
 
@@ -159,13 +159,52 @@ flogger.fluentd_port=<fluentd_port>
 Implement your desired logic and provide a singleton getter:
 
 ```java
-public static com.agsimeonov.flogger.backend.fluentdFluentdRemoteSettings getInstance()
+public static com.agsimeonov.flogger.backend.fluentd.FluentdRemoteSettings getInstance()
 ```
 
-##### 2. Configure [`FluentdRemoteSettings`] via Java System Property
+##### Configure [`FluentdRemoteSettings`] via Java System Property
 
 ```java
 flogger.remote_settings=your.pack.path.YourRemoteSettings#getInstance
+```
+
+### Logging Levels
+
+By default Logging Levels are not a concept reconginzed by Fluentd. They can however easily be added as log elements and the `tag_suffix` of the Logger Name which is what we do in the Fluentd Flogger Backend. Flogger provides features to handle disabled logs and force logging. We provide support for those features via `FluentdLevelDisabler`. This is a class that can be extended and configured to handle disabling of Levels. We provide an implementation of this class that handles this via System Properties.
+
+#### Configure Level Disabling/Enabling via Java System Properties
+
+Java System Properties available for Level Disabling:
+
+```java
+flogger.level_disabler=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesLevelDisabler#getInstance
+flogger.exclusive=<true/false>
+flogger.<name>=<true/false>
+flogger.level=<integer>
+```
+
+Here is how they will reslove:
+
+1. If `flogger.exclusive` is not set logging is enabled for all Levels.
+2. If `flogger.exclusive` is set to true and `logger.<name>` is set to true logging is disabled for Level `<name>`
+3. If `flogger.exclusive` is set to true and `flogger.level` is set logging is disabled if the Level integer value is greater than `flogger.level`.
+4. Otherwise if `flogger.exclusive` is set to true logging is enabled for all Levels.
+5. If `flogger.exclusive` is set to false and `logger.<name>` is set to true logging is enabled for Level `<name>`
+6. If `flogger.exclusive` is set to false and `flogger.level` is set logging is enabled if the Level integer value is greater than or equal to `flogger.level`.
+7. Otherwise if `flogger.exclusive` is is to false logging is disabled for all Levels.
+
+#### Extend [`com.agsimeonov.flogger.backend.fluentd.FluentdLevelDisabler`]
+
+Implement your desired logic and provide a singleton getter:
+
+```java
+public static com.agsimeonov.flogger.backend.fluentd.FluentdLevelDisabler getInstance()
+```
+
+##### Configure [`FluentdLevelDisabler`] via Java System Property
+
+```java
+flogger.level_disabler=your.pack.path.YourLevelDisabler#getInstance
 ```
 
 ## How to use Flogger
