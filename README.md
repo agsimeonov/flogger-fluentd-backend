@@ -372,7 +372,7 @@ public static LoggingContext getInstance()
 flogger.clock=your.pack.path.YourClock#getInstance
 ```
 
-## Settings Java System Properties
+## Setting Java System Properties
 
 As you might have noticed Flogger and the Flogger Fluentd Backend are highly configurable through Java System Properties.  Here are aome simple ways to set them:
 
