@@ -62,6 +62,112 @@ dependencies {
 }
 ```
 
+## Fluentd Flogger Backend Features
+
+### Configuring Fluentd Flogger Backend
+
+In order for Fluentd Flogger Backend to be used we need to do the following:
+
+#### Configure Backend Factory via Java System Property
+
+```java
+flogger.backend_factory=com.agsimeonov.flogger.backend.fluentd.FluentdBackendFactory#getInstance
+```
+
+### Configure Logger Name [`tag_prefix`] via [`FluentdCallerFinder`]
+
+By default the Fluentd Logger Name otherwise known as `tag_prefix` will be set to the calling class name. You can change this by extending and configuring your own `FluentdCallerFinder` or using an existing one that ships with Fluentd Flogger Backend.
+
+#### Configure your own [`FluentdCallerFinder`]
+
+You might want to do something custom.  If so you will have to write some code.
+
+##### 1. Extend [`com.agsimeonov.flogger.backend.fluentd.FluentdCallerFinder`]
+
+Implement your desired logic and provide a singleton getter:
+
+```java
+public static com.google.common.flogger.backend.Platform.LogCallerFinder getInstance()
+```
+
+##### 2. Configure Caller Finder via Java System Property
+
+```java
+flogger.caller_finder=your.pack.path.YourCallerFinder#getInstance
+```
+
+#### Utilize [`SystemPropertiesCallerFinder`]
+
+You may wish to set the Logger Name using a Java System Property.
+
+##### 1. Configure [`SystemPropertiesCallerFinder`] via Java System Property
+
+```java
+flogger.caller_finder=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesCallerFinder#getInstance
+```
+
+##### 1. Configure Logger Name via Java System Property
+
+```java
+flogger.tag_prefix=<tag_prefix>
+```
+
+#### Utilize [`ImplementationTitleCallerFinder`]
+
+If the Java Implementation Title is set you can utilize the [`ImplementationTitleCallerFinder`].
+
+##### Example add implementation title via Maven
+
+```xml
+<plugins>
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+      <archive>
+        <manifest>
+          <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+        </manifest>
+      </archive>
+    </configuration>
+  </plugin>
+</plugins>
+```
+
+##### Configure [`ImplementationTitleCallerFinder`] via Java System Property
+
+```java
+flogger.caller_finder=com.agsimeonov.flogger.backend.fluentd.ImplementationTitleCallerFinder#getInstance
+```
+
+### Configure Remote Fluentd Logger
+
+By default Flogger Fluentd Backend assumed the fluent daemon is launched locally.Sometimes you will need to connect to Fluentd on a remote host. In order to achieve this you can either configure your own mechanism by extending and configuring `FluentdRemoteSettings` or you can use System Properties and utilize `SystemPropertiesRemoteSettings`.
+
+#### Utilize Java System Properties
+
+Set the Java System Properties necessary for a remote Fluentd connection as follows:
+
+```java
+flogger.remote_settings=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesFluentdRemoteLoggerSettings#getInstance
+flogger.fluentd_host=<fluentd_host>
+flogger.fluentd_port=<fluentd_port>
+```
+
+#### Extend [`com.agsimeonov.flogger.backend.fluentd.FluentdRemoteSettings`]
+
+Implement your desired logic and provide a singleton getter:
+
+```java
+public static com.agsimeonov.flogger.backend.fluentdFluentdRemoteSettings getInstance()
+```
+
+##### 2. Configure [`FluentdRemoteSettings`] via Java System Property
+
+```java
+flogger.remote_settings=your.pack.path.YourRemoteSettings#getInstance
+```
+
 ## How to use Flogger
 
 ### 1. Add an import for [`FluentLogger`]
@@ -88,9 +194,11 @@ logger.atInfo().withCause(exception).log("Log message with: %s", argument);
 
 Metadata represents any additional key/value information that should be attached to a log statement. Metadata keys can be used to provide log statements with strongly typed values which can be read and interpreted by logging backends or other logs related tools. This mechanism is intended for values with specific semantics and should not be seen as a replacement for logging arguments as part of a formatted log message.
 
-**NOTE: The featuers outlined here will soon be released into `com.google.common.flogger.FluentLogger`. When this happens `GoogleLogger` and the `google-extensions` dependency will not be required in order to use Metadata.**
+**NOTE: 1, 2, 3 will not be necessary in Flogger versions > 0.4 as the necessary APIs for 4, 5 will be released into `com.google.common.flogger.FluentLogger`.**
 
 #### 1. Add the [`google-extensions`] Flogger dependency
+
+**Manual:**
 
 Add the following jar file to your `classpath`:
 
@@ -201,15 +309,33 @@ Implement your desired logic and provide a singleton getter:
 public static LoggingContext getInstance()
 ```
 
-#### 2. Java System Property
+#### 2. Configure Logging Context via Java System Property
 
 ```java
 flogger.logging_context=your.pack.path.YourLoggingContext#getInstance
 ```
 
+### Specify a custom [`Clock`]
+
+A clock populates walltime timestamps for log statements.
+
+#### 1. Extend [`com.google.common.flogger.backend.system.Clock`]
+
+Implement your desired logic and provide a singleton getter:
+
+```java
+public static LoggingContext getInstance()
+```
+
+#### 2. Configure Clock via Java System Property
+
+```java
+flogger.clock=your.pack.path.YourClock#getInstance
+```
+
 ## Settings Java System Properties
 
-As you might have noticed a Flogger and the Flogger Fluentd Backend are highly configurable through Java System Properties.  Here are aome simple ways to set those:
+As you might have noticed Flogger and the Flogger Fluentd Backend are highly configurable through Java System Properties.  Here are aome simple ways to set them:
 
 ### 1. Programatically
 
@@ -235,3 +361,7 @@ Documentation can be found at:
 
 * <https://agsimeonov.github.io/flogger-fluentd-backend>
 * <https://google.github.io/flogger>
+
+## License
+
+Apache License, Version 2.0
