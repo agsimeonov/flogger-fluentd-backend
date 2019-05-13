@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-/** Core package for the Fluentd Flogger Backend. */
+/** Core package for the Flogger Fluentd Backend. */
 package com.agsimeonov.flogger.backend.fluentd;

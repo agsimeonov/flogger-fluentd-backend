@@ -84,6 +84,7 @@ final class FluentdLoggerBackend extends LoggerBackend {
           Tags tags = (Tags) value;
           tags.emitAll(new FluentdTagsKeyValueHandler(label, out));
         } else {
+          if (value == null) continue;
           if (key.canRepeat()) {
             repeated.computeIfAbsent(label, argument -> new ArrayList<>()).add(value);
           } else {
