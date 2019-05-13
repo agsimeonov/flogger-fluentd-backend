@@ -398,7 +398,7 @@ java -Dkey="value" application_launcher_class
 
 Documentation can be found at:
 
-* <https://agsimeonov.github.io/flogger-fluentd-backend>
+* <https://agsimeonov.github.io/flogger-fluentd-backend/index.html>
 * <https://google.github.io/flogger>
 
 ## License
