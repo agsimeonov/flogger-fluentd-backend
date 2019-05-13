@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+  <TITLE>A Fluentd Flogger Backend</TITLE>
+</HEAD>
+
+<BODY>
+<h1 id="flogger-fluentd-backend">Flogger Fluentd Backend</h1>
+<h2 id="overview">Overview</h2>
+<p>Flogger Fluentd Backend is a backend for <a href="https://github.com/google/flogger">Flogger</a> utilizing the <a href="https://github.com/fluent/fluent-logger-java">Fluentd Logger for Java</a> that sends logs to <a href="https://github.com/fluent/fluentd">Fluentd</a>.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Java &gt;= 1.8</li>
+<li>flogger &gt;= 0.2</li>
+<li>flogger-system-backend &gt;= 0.2</li>
+</ul>
+<h2 id="install">Install</h2>
+<p>In the following examples replace <code>${flogger.version}</code> or <code>floggerVersion</code> and <code>${flogger-fluentd-backend.version}</code> or <code>floggerFluentdBackendVersion</code> with the current version of Flogger and Flogger Fluentd Backend respectively.</p>
+<p><strong>Manual:</strong></p>
+<p>Add the following jar files to your <code>classpath</code>:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> http://central.maven.org/maven2/com/google/flogger/flogger/<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>/flogger-<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>.jar
+<span class="kw">wget</span> http://central.maven.org/maven2/com/google/flogger/flogger-system-backend/<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>/flogger-system-backend-<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>.jar
+<span class="kw">wget</span> http://central.maven.org/maven2/io/github/agsimeonov/flogger-fluentd-backend/<span class="ot">${flogger-</span>fluentd-backend.version<span class="ot">}</span>/flogger-fluentd-backend-<span class="ot">${flogger-</span>fluentd-backend.version<span class="ot">}</span>.jar</code></pre>
+<p><strong>Maven:</strong></p>
+<p>Include the following dependencies in your <code>pom.xml</code>:</p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;dependencies&gt;</span>
+  ...
+  <span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>com.google.flogger<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>flogger<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>${flogger.version}<span class="kw">&lt;/version&gt;</span>
+  <span class="kw">&lt;/dependency&gt;</span>
+  <span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>com.google.flogger<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>flogger-system-backend<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>${flogger.version}<span class="kw">&lt;/version&gt;</span>
+  <span class="kw">&lt;/dependency&gt;</span>
+  <span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>io.github.agsimeonov<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>flogger-fluentd-backend<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>${flogger-fluentd-backend.version}<span class="kw">&lt;/version&gt;</span>
+  <span class="kw">&lt;/dependency&gt;</span>
+  ...
+<span class="kw">&lt;/dependencies&gt;</span></code></pre>
+<p><strong>Gradle:</strong></p>
+<p>Include the following dependencies in your <code>build.gradle</code>:</p>
+<pre class="gradle"><code>dependencies {
+  compile &#39;com.google.flogger:flogger:&#39;+floggerVersion
+  compile &#39;com.google.flogger:flogger-system-backend:&#39;+floggerVersion
+  compile &#39;io.github.agsimeonov:flogger-fluentd-backend:&#39;+floggerFluentdBackendVersion
+}</code></pre>
+<h2 id="fluentd-flogger-backend-features">Fluentd Flogger Backend Features</h2>
+<h3 id="configuring-fluentd-flogger-backend">Configuring Fluentd Flogger Backend</h3>
+<p>In order for Fluentd Flogger Backend to be used we need to do the following:</p>
+<h4 id="configure-backend-factory-via-java-system-property">Configure Backend Factory via Java System Property</h4>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">backend_factory</span>=com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">FluentdBackendFactory</span>#getInstance</code></pre>
+<h3 id="configure-logger-name-tag_prefix-via-fluentdcallerfinder">Configure Logger Name [<code>tag_prefix</code>] via [<code>FluentdCallerFinder</code>]</h3>
+<p>By default the Fluentd Logger Name otherwise known as <code>tag_prefix</code> will be set to the calling class name. You can change this by extending and configuring your own <code>FluentdCallerFinder</code> or using an existing one that ships with Fluentd Flogger Backend.</p>
+<h4 id="configure-your-own-fluentdcallerfinder">Configure your own [<code>FluentdCallerFinder</code>]</h4>
+<p>You might want to do something custom. If so you will have to write some code.</p>
+<h5 id="extend-com.agsimeonov.flogger.backend.fluentd.fluentdcallerfinder">1. Extend [<code>com.agsimeonov.flogger.backend.fluentd.FluentdCallerFinder</code>]</h5>
+<p>Implement your desired logic and provide a singleton getter:</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> com.<span class="fu">google</span>.<span class="fu">common</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">Platform</span>.<span class="fu">LogCallerFinder</span> <span class="fu">getInstance</span>()</code></pre>
+<h5 id="configure-caller-finder-via-java-system-property">2. Configure Caller Finder via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">caller_finder</span>=your.<span class="fu">pack</span>.<span class="fu">path</span>.<span class="fu">YourCallerFinder</span>#getInstance</code></pre>
+<h4 id="utilize-systempropertiescallerfinder">Utilize [<code>SystemPropertiesCallerFinder</code>]</h4>
+<p>You may wish to set the Logger Name using a Java System Property.</p>
+<h5 id="configure-systempropertiescallerfinder-via-java-system-property">1. Configure [<code>SystemPropertiesCallerFinder</code>] via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">caller_finder</span>=com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">SystemPropertiesCallerFinder</span>#getInstance</code></pre>
+<h5 id="configure-logger-name-via-java-system-property">1. Configure Logger Name via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">tag_prefix</span>=&lt;tag_prefix&gt;</code></pre>
+<h4 id="utilize-implementationtitlecallerfinder">Utilize [<code>ImplementationTitleCallerFinder</code>]</h4>
+<p>If the Java Implementation Title is set you can utilize the [<code>ImplementationTitleCallerFinder</code>].</p>
+<h5 id="example-add-implementation-title-via-maven">Example add implementation title via Maven</h5>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;plugins&gt;</span>
+  <span class="kw">&lt;plugin&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>maven-jar-plugin<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;configuration&gt;</span>
+      <span class="kw">&lt;archive&gt;</span>
+        <span class="kw">&lt;manifest&gt;</span>
+          <span class="kw">&lt;addDefaultImplementationEntries&gt;</span>true<span class="kw">&lt;/addDefaultImplementationEntries&gt;</span>
+        <span class="kw">&lt;/manifest&gt;</span>
+      <span class="kw">&lt;/archive&gt;</span>
+    <span class="kw">&lt;/configuration&gt;</span>
+  <span class="kw">&lt;/plugin&gt;</span>
+<span class="kw">&lt;/plugins&gt;</span></code></pre>
+<h5 id="configure-implementationtitlecallerfinder-via-java-system-property">Configure [<code>ImplementationTitleCallerFinder</code>] via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">caller_finder</span>=com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">ImplementationTitleCallerFinder</span>#getInstance</code></pre>
+<h3 id="configure-remote-fluentd-logger">Configure Remote Fluentd Logger</h3>
+<p>By default Flogger Fluentd Backend assumed the fluent daemon is launched locally.Sometimes you will need to connect to Fluentd on a remote host. In order to achieve this you can either configure your own mechanism by extending and configuring <code>FluentdRemoteSettings</code> or you can use System Properties and utilize <code>SystemPropertiesRemoteSettings</code>.</p>
+<h4 id="configure-remote-settings-via-java-system-properties">Configure Remote Settings via Java System Properties</h4>
+<p>Set the Java System Properties necessary for a remote Fluentd connection as follows:</p>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">remote_settings</span>=com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">SystemPropertiesFluentdRemoteLoggerSettings</span>#getInstance
+flogger.<span class="fu">fluentd_host</span>=&lt;fluentd_host&gt;
+flogger.<span class="fu">fluentd_port</span>=&lt;fluentd_port&gt;</code></pre>
+<h4 id="extend-com.agsimeonov.flogger.backend.fluentd.fluentdremotesettings">Extend [<code>com.agsimeonov.flogger.backend.fluentd.FluentdRemoteSettings</code>]</h4>
+<p>Implement your desired logic and provide a singleton getter:</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">FluentdRemoteSettings</span> <span class="fu">getInstance</span>()</code></pre>
+<h5 id="configure-fluentdremotesettings-via-java-system-property">Configure [<code>FluentdRemoteSettings</code>] via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">remote_settings</span>=your.<span class="fu">pack</span>.<span class="fu">path</span>.<span class="fu">YourRemoteSettings</span>#getInstance</code></pre>
+<h3 id="logging-levels">Logging Levels</h3>
+<p>By default Logging Levels are not a concept reconginzed by Fluentd. They can however easily be added as log elements and the <code>tag_suffix</code> of the Logger Name which is what we do in the Fluentd Flogger Backend. Flogger provides features to handle disabled logs and force logging. We provide support for those features via <code>FluentdLevelDisabler</code>. This is a class that can be extended and configured to handle disabling of Levels. We provide an implementation of this class that handles this via System Properties.</p>
+<h4 id="configure-level-disablingenabling-via-java-system-properties">Configure Level Disabling/Enabling via Java System Properties</h4>
+<p>Java System Properties available for Level Disabling:</p>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">level_disabler</span>=com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">SystemPropertiesLevelDisabler</span>#getInstance
+flogger.<span class="fu">exclusive</span>=&lt;<span class="kw">true</span>/<span class="kw">false</span>&gt;
+flogger.&lt;name&gt;=&lt;<span class="kw">true</span>/<span class="kw">false</span>&gt;
+flogger.<span class="fu">level</span>=&lt;integer&gt;</code></pre>
+<p>Here is how they will reslove:</p>
+<ol style="list-style-type: decimal">
+<li>If <code>flogger.exclusive</code> is not set logging is enabled for all Levels.</li>
+<li>If <code>flogger.exclusive</code> is set to true and <code>logger.&lt;name&gt;</code> is set to true logging is disabled for Level <code>&lt;name&gt;</code></li>
+<li>If <code>flogger.exclusive</code> is set to true and <code>flogger.level</code> is set logging is disabled if the Level integer value is greater than <code>flogger.level</code>.</li>
+<li>Otherwise if <code>flogger.exclusive</code> is set to true logging is enabled for all Levels.</li>
+<li>If <code>flogger.exclusive</code> is set to false and <code>logger.&lt;name&gt;</code> is set to true logging is enabled for Level <code>&lt;name&gt;</code></li>
+<li>If <code>flogger.exclusive</code> is set to false and <code>flogger.level</code> is set logging is enabled if the Level integer value is greater than or equal to <code>flogger.level</code>.</li>
+<li>Otherwise if <code>flogger.exclusive</code> is is to false logging is disabled for all Levels.</li>
+</ol>
+<h4 id="extend-com.agsimeonov.flogger.backend.fluentd.fluentdleveldisabler">Extend [<code>com.agsimeonov.flogger.backend.fluentd.FluentdLevelDisabler</code>]</h4>
+<p>Implement your desired logic and provide a singleton getter:</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> com.<span class="fu">agsimeonov</span>.<span class="fu">flogger</span>.<span class="fu">backend</span>.<span class="fu">fluentd</span>.<span class="fu">FluentdLevelDisabler</span> <span class="fu">getInstance</span>()</code></pre>
+<h5 id="configure-fluentdleveldisabler-via-java-system-property">Configure [<code>FluentdLevelDisabler</code>] via Java System Property</h5>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">level_disabler</span>=your.<span class="fu">pack</span>.<span class="fu">path</span>.<span class="fu">YourLevelDisabler</span>#getInstance</code></pre>
+<h2 id="how-to-use-flogger">How to use Flogger</h2>
+<h3 id="add-an-import-for-fluentlogger">1. Add an import for [<code>FluentLogger</code>]</h3>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import com.google.common.flogger.FluentLogger;</span></code></pre>
+<h3 id="create-a-private-static-final-instance">2. Create a <code>private static final</code> instance</h3>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">private</span> <span class="dt">static</span> <span class="dt">final</span> FluentLogger logger = FluentLogger.<span class="fu">forEnclosingClass</span>();</code></pre>
+<h3 id="start-logging">3. Start logging</h3>
+<pre class="sourceCode java"><code class="sourceCode java">logger.<span class="fu">atInfo</span>().<span class="fu">withCause</span>(exception).<span class="fu">log</span>(<span class="st">&quot;Log message with: %s&quot;</span>, argument);</code></pre>
+<h2 id="flogger-advanced-features">Flogger Advanced Features</h2>
+<h3 id="metadata-and-googlelogger">Metadata and [<code>GoogleLogger</code>]</h3>
+<p>Metadata represents any additional key/value information that should be attached to a log statement. Metadata keys can be used to provide log statements with strongly typed values which can be read and interpreted by logging backends or other logs related tools. This mechanism is intended for values with specific semantics and should not be seen as a replacement for logging arguments as part of a formatted log message.</p>
+<p><strong>NOTE: 1, 2, 3 will not be necessary in Flogger versions &gt; 0.4 as the necessary APIs for 4, 5 will be released into <code>com.google.common.flogger.FluentLogger</code>.</strong></p>
+<h4 id="add-the-google-extensions-flogger-dependency">1. Add the [<code>google-extensions</code>] Flogger dependency</h4>
+<p><strong>Manual:</strong></p>
+<p>Add the following jar file to your <code>classpath</code>:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> http://central.maven.org/maven2/com/google/flogger/google-extensions/<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>/google-extensions-<span class="ot">${flogger</span><span class="er">.version</span><span class="ot">}</span>.jar</code></pre>
+<p><strong>Maven:</strong></p>
+<p>Include the following dependency in your <code>pom.xml</code>:</p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;dependencies&gt;</span>
+  ...
+  <span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>com.google.flogger<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>google-extensions<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>${flogger.version}<span class="kw">&lt;/version&gt;</span>
+  <span class="kw">&lt;/dependency&gt;</span>
+  ...
+<span class="kw">&lt;/dependencies&gt;</span></code></pre>
+<p><strong>Gradle:</strong></p>
+<p>Include the following dependency in your <code>build.gradle</code>:</p>
+<pre class="gradle"><code>dependencies {
+  compile &#39;com.google.flogger:google-extensions:&#39;+floggerVersion
+}</code></pre>
+<h4 id="add-an-import-for-googlelogger">2. Add an import for [<code>GoogleLogger</code>]</h4>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import com.google.common.flogger.GoogleLogger;</span></code></pre>
+<h4 id="create-a-private-static-final-instance-1">3. Create a <code>private static final</code> instance</h4>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">private</span> <span class="dt">static</span> <span class="dt">final</span> GoogleLogger logger = FluentLogger.<span class="fu">forEnclosingClass</span>();</code></pre>
+<h4 id="log-single-metadata">4. Log single Metadata</h4>
+<p>Creates a key for a single piece of metadata. If metadata is set more than once using thiskey for the same log statement, the last set value will be the one used, and other values will be ignored (although callers should never rely on this behavior).</p>
+<pre class="sourceCode java"><code class="sourceCode java">logger.<span class="fu">atInfo</span>()
+      .<span class="fu">with</span>(MetadataKey .<span class="fu">single</span>(<span class="st">&quot;text&quot;</span>, String.<span class="fu">class</span>), <span class="st">&quot;Hello, World!&quot;</span>)
+      .<span class="fu">log</span>();</code></pre>
+<h4 id="log-repeated-metadata">5. Log repeated Metadata</h4>
+<p>Creates a key for a repeated piece of metadata. If metadata is added more than once using this key for a log statement, all values will be retained as key/value pairs in the order they were added.</p>
+<pre class="sourceCode java"><code class="sourceCode java">logger.<span class="fu">atInfo</span>()
+      .<span class="fu">with</span>(MetadataKey.<span class="fu">repeated</span>(<span class="st">&quot;numeric&quot;</span>, Integer.<span class="fu">class</span>), <span class="dv">1</span>)
+      .<span class="fu">with</span>(MetadataKey.<span class="fu">repeated</span>(<span class="st">&quot;numeric&quot;</span>, Integer.<span class="fu">class</span>), <span class="dv">2</span>)
+      .<span class="fu">with</span>(MetadataKey.<span class="fu">repeated</span>(<span class="st">&quot;numeric&quot;</span>, Integer.<span class="fu">class</span>), <span class="dv">2</span>)
+      .<span class="fu">log</span>();</code></pre>
+<h3 id="tags">Tags</h3>
+<p>Tags are a special type of immutable Metadata. A tag is either a <code>simple</code> tag or a tag with a value. When thinking of tags as a <code>Map&lt;String, Set&lt;Object&gt;&gt;</code>, the value of a <code>simple</code> tag is the empty set.</p>
+<h4 id="add-and-import-for-tags">1. Add and import for [<code>Tags</code>]</h4>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import com.google.common.flogger.backend.Tags;</span></code></pre>
+<h4 id="create-some-simple-tags">2. Create some <code>simple</code> tags</h4>
+<pre class="sourceCode java"><code class="sourceCode java">Tags.<span class="fu">builder</span>()
+    .<span class="fu">addTag</span>(<span class="st">&quot;a&quot;</span>)
+    .<span class="fu">addTag</span>(<span class="st">&quot;b&quot;</span>)
+    .<span class="fu">addTag</span>(<span class="st">&quot;c&quot;</span>)
+    .<span class="fu">build</span>();</code></pre>
+<h4 id="create-tags-with-values">3. Create tags with values</h4>
+<pre class="sourceCode java"><code class="sourceCode java">Tags.<span class="fu">builder</span>()
+    .<span class="fu">addTag</span>(<span class="st">&quot;long&quot;</span>, 1L)
+    .<span class="fu">addTag</span>(<span class="st">&quot;boolean&quot;</span>, <span class="kw">true</span>)
+    .<span class="fu">addTag</span>(<span class="st">&quot;double&quot;</span>, <span class="fl">1.0</span>)
+    .<span class="fu">addTag</span>(<span class="st">&quot;string&quot;</span>, <span class="st">&quot;text&quot;</span>)
+    .<span class="fu">build</span>();</code></pre>
+<h3 id="modify-logging-behavior-via-loggingcontext">Modify logging behavior via [<code>LoggingContext</code>]</h3>
+<p><code>LoggingContext</code> is an API for injecting scoped metadata for log statements (either globally or on a per-request basis). The API can also be used to force logging regardless of the normal log level configuration of the logger and ignoring any rate limiting or other filtering.</p>
+<h4 id="extend-com.google.common.flogger.backend.system.loggingcontext">1. Extend [<code>com.google.common.flogger.backend.system.LoggingContext</code>]</h4>
+<p>Implement your desired logic and provide a singleton getter:</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> LoggingContext <span class="fu">getInstance</span>()</code></pre>
+<h4 id="configure-logging-context-via-java-system-property">2. Configure Logging Context via Java System Property</h4>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">logging_context</span>=your.<span class="fu">pack</span>.<span class="fu">path</span>.<span class="fu">YourLoggingContext</span>#getInstance</code></pre>
+<h3 id="specify-a-custom-clock">Specify a custom [<code>Clock</code>]</h3>
+<p>A clock populates walltime timestamps for log statements.</p>
+<h4 id="extend-com.google.common.flogger.backend.system.clock">1. Extend [<code>com.google.common.flogger.backend.system.Clock</code>]</h4>
+<p>Implement your desired logic and provide a singleton getter:</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> LoggingContext <span class="fu">getInstance</span>()</code></pre>
+<h4 id="configure-clock-via-java-system-property">2. Configure Clock via Java System Property</h4>
+<pre class="sourceCode java"><code class="sourceCode java">flogger.<span class="fu">clock</span>=your.<span class="fu">pack</span>.<span class="fu">path</span>.<span class="fu">YourClock</span>#getInstance</code></pre>
+<h2 id="settings-java-system-properties">Settings Java System Properties</h2>
+<p>As you might have noticed Flogger and the Flogger Fluentd Backend are highly configurable through Java System Properties. Here are aome simple ways to set them:</p>
+<h3 id="programatically">1. Programatically</h3>
+<pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">setProperty</span>(<span class="st">&quot;key&quot;</span>, <span class="st">&quot;value&quot;</span>);</code></pre>
+<h3 id="environment-variable">2. Environment Variable</h3>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">export</span> <span class="ot">JAVA_TOOL_OPTIONS=</span><span class="st">&#39;-Dkey1=value1 -Dkey2=value2&#39;</span></code></pre>
+<h3 id="command-line">3. Command Line</h3>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">java</span> -Dkey=<span class="st">&quot;value&quot;</span> application_launcher_class</code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>Documentation can be found at:</p>
+<ul>
+<li><a href="https://agsimeonov.github.io/flogger-fluentd-backend">https://agsimeonov.github.io/flogger-fluentd-backend</a></li>
+<li><a href="https://google.github.io/flogger">https://google.github.io/flogger</a></li>
+</ul>
+<h2 id="license">License</h2>
+<p>Apache License, Version 2.0</p>
+</BODY>
+
+</HTML>
