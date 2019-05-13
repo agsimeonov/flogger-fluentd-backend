@@ -6,7 +6,7 @@
 
   <groupId>io.github.agsimeonov</groupId>
   <artifactId>flogger-fluentd-backend</artifactId>
-  <version>1.0.RELEASE</version>
+  <version>1.1-SNAPSHOT</version>
 
   <name>flogger-fluentd-backend</name>
   <description>Flogger Fluentd Backend</description>
@@ -16,12 +16,12 @@
     <name>io.github.agsimeonov</name>
     <url>https://github.com/agsimeonov</url>
   </organization>
-  
+
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/agsimeonov/flogger-fluentd-backend/issues</url>
   </issueManagement>
-  
+
   <licenses>
     <license>
       <name>Apache License 2.0</name>
@@ -167,7 +167,7 @@
               <gpgArguments>
                 <arg>--pinentry-mode</arg>
                 <arg>loopback</arg>
-              </gpgArguments> 
+              </gpgArguments>
               <passphraseServerId>${gpg.keyname}</passphraseServerId>
             </configuration>
           </execution>
