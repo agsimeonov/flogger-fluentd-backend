@@ -9,7 +9,37 @@
   <version>1.0.RELEASE</version>
 
   <name>flogger-fluentd-backend</name>
+  <description>Flogger Fluentd Backend</description>
   <url>https://github.com/agsimeonov/flogger-fluentd-backend</url>
+
+  <organization>
+    <name>io.github.agsimeonov</name>
+    <url>https://github.com/agsimeonov</url>
+  </organization>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/agsimeonov/flogger-fluentd-backend/issues</url>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>https://github.com/agsimeonov/flogger-fluentd-backend/blob/master/LICENSE</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/agsimeonov/flogger-fluentd-backend.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:agsimeonov/flogger-fluentd-backend.git</developerConnection>
+    <url>https://github.com/agsimeonov/flogger-fluentd-backend</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Alexander Simeonov</name>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,6 +152,38 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+              <passphraseServerId>${gpg.keyname}</passphraseServerId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
       <!-- source plugin, see https://maven.apache.org/plugins/maven-source-plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -131,7 +193,7 @@
           <execution>
             <id>attach-sources</id>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
@@ -152,4 +214,15 @@
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 </project>
