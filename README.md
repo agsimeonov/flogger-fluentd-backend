@@ -106,7 +106,7 @@ You may wish to set the Logger Name using a Java System Property.
 flogger.caller_finder=com.agsimeonov.flogger.backend.fluentd.SystemPropertiesCallerFinder#getInstance
 ```
 
-##### 1. Configure Logger Name via Java System Property
+##### 2. Configure Logger Name via Java System Property
 
 ```java
 flogger.tag_prefix=<tag_prefix>
